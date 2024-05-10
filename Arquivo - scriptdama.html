@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkers Game</title>
+    <style>
+        canvas {
+            border: 1px solid #000;
+            display: block;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Checkers Game</h1>
+    <h3 style="text-align: center;">Created by Hiei</h3>
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
+
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        const tileSize = canvas.width / 8;
+
+        function drawBoard() {
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    if ((row + col) % 2 === 0) {
+                        ctx.fillStyle = "#fff";
+                    } else {
+                        ctx.fillStyle = "#000";
+                    }
+                    ctx.fillRect(col * tileSize, row * tileSize, tileSize, tileSize);
+                }
+            }
+        }
+
+        function drawPiece(x, y, color) {
+            ctx.beginPath();
+            ctx.arc(x * tileSize + tileSize / 2, y * tileSize + tileSize / 2, tileSize / 3, 0, Math.PI * 2);
+            ctx.fillStyle = color;
+            ctx.fill();
+            ctx.closePath();
+        }
+
+        function drawPieces() {
+            for (let row = 0; row < 3; row++) {
+                for (let col = 0; col < 8; col++) {
+                    if ((row + col) % 2 !== 0) {
+                        drawPiece(col, row, "#ff0000");
+                    }
+                }
+            }
+            for (let row = 5; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    if ((row + col) % 2 !== 0) {
+                        drawPiece(col, row, "#0000ff");
+                    }
+                }
+            }
+        }
+
+        function draw() {
+            drawBoard();
+            drawPieces();
+        }
+
+        function handleTouch(event) {
+            const touchX = event.touches[0].clientX;
+            const touchY = event.touches[0].clientY;
+            const canvasRect = canvas.getBoundingClientRect();
+            const canvasX = touchX - canvasRect.left;
+            const canvasY = touchY - canvasRect.top;
+
+            const col = Math.floor(canvasX / tileSize);
+            const row = Math.floor(canvasY / tileSize);
+
+            console.log("Touched tile:", col, row);
+        }
+
+        document.addEventListener("DOMContentLoaded", draw);
+        canvas.addEventListener("touchstart", handleTouch);
+    </script>
+</body>
+</html>
